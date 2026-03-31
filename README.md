@@ -1,3 +1,114 @@
+# Vision Studio
+
+Real-time **path detector and path predictor** built with PyQt6 + OpenCV + PyTorch.
+
+The app detects moving objects, tracks each object's path over time, and predicts where each path is heading next.
+
+![Vision Studio Screenshot](./screenshots/Image1.png)
+
+## What It Does
+
+- **Path Detection:** detects objects in video frames
+- **Path Tracking:** links detections into stable IDs and trajectory history
+- **Path Prediction:** forecasts future trajectory points per tracked object
+- **Live UI Controls:** switch algorithms, filter object size, tune smoothing
+
+## Core Features
+
+### Detection Algorithms
+- Background Subtraction (MOG2, KNN)
+- Optical Flow (Farneback)
+- HOG + SVM (pedestrian)
+- Haar Cascade (face/body)
+- YOLOv8 (nano/small/medium)
+
+### Prediction Algorithms
+
+**Classical**
+- Kalman Filter
+- Constant Velocity
+- Constant Acceleration
+- Smoothed Velocity (EMA)
+- Social Force (Damped)
+
+**Deep Learning**
+- LSTM
+- GRU
+- Transformer (mmTransformer-style)
+- Trajectron++
+- LaneGCN
+
+### Stability / Smoothing
+- **Input centroid smoothing** (EMA) to reduce noisy path updates
+- **Prediction temporal blend** to calm sudden jumps in forecast lines
+- Adjustable live with sliders in the UI
+
+### Tracking & Filtering
+- IoU + distance matching tracker
+- Object size threshold filter (min/max width and height)
+- Multi-camera selection + refresh scan
+- Real-time stats: FPS, detections, tracks, filtered count
+
+## Project Structure
+
+```text
+Vision/
+├── main.py
+├── requirements.txt
+├── models/
+│   ├── detectors.py
+│   ├── predictors.py
+│   └── deep_models.py
+├── ui/
+│   ├── main_window.py
+│   └── video_thread.py
+├── utils/
+│   ├── tracker.py
+│   └── visualization.py
+└── screenshots/
+    └── Image1.png
+```
+
+## Setup
+
+```bash
+cd /path/to/Vision
+pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+python main.py
+```
+
+## Quick Usage
+
+1. Select camera (or open a video file)
+2. Choose detection algorithm
+3. Choose prediction algorithm
+4. Press **Start**
+5. Watch:
+   - solid trail = past path
+   - dashed line = predicted future path
+6. If prediction is jumpy, lower smoothing sliders to calm it down
+
+## macOS Camera Permission
+
+If camera init fails, allow camera access for your terminal/IDE:
+
+`System Settings -> Privacy & Security -> Camera`
+
+Then return to the app and click **Refresh** in camera selector.
+
+## Notes
+
+- Deep learning predictors train online from observed trajectories.
+- Until enough samples are collected, deep models fall back to simpler motion behavior.
+
+## License
+
+MIT
 <div align="center">
 
 # Vision Studio
